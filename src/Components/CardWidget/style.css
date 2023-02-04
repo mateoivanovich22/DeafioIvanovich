@@ -1,0 +1,14 @@
+.divCardWidget{
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.imgLogo{
+    width: 25px;
+    height: 25px;
+}
+
+.cantidad{
+    font-size: 15px;
+    color: red;
+}
