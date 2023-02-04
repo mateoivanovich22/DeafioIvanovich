@@ -6,9 +6,9 @@ import fotoMain from './assets/img/modelo2.png';
 function App() {
   return (
     <div className="App" style={{backgroundImage: `url(${background})`}}>
-      <header>
+      <header>   
         <h1>Naike Shoes.</h1>
-        <NavBar/>
+        <NavBar/>       
       </header>
       <main>
         <div>
@@ -20,6 +20,7 @@ function App() {
 
       </footer>
     </div>
+    
   );
 }
 

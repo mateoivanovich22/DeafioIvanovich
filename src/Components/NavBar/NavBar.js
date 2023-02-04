@@ -6,12 +6,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './style.css'
+import ItemListContainer from "../itemListContainer/itemListContainer";
+
 
 export default function NavBar() {
   return (
     <Navbar bg="light" id="nav">
       <Container fluid>
-        <Navbar.Brand href="#" id="nombreNav">Home</Navbar.Brand>
+        <Navbar.Brand href="#" id="nombreNav"> <ItemListContainer section="Home" /></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -19,16 +21,16 @@ export default function NavBar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#Shoes">Shoes</Nav.Link>
-            <Nav.Link href="#Contact">Contact</Nav.Link>
+            <Nav.Link href="#Shoes"> <ItemListContainer section="Shoes" /> </Nav.Link>
+            <Nav.Link href="#Contact"><ItemListContainer section="Contact" /></Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#Discount">Discount</NavDropdown.Item>
+              <NavDropdown.Item href="#Discount"><ItemListContainer section="Discount" /></NavDropdown.Item>
               <NavDropdown.Item href="#Latest Shoes">
-                Latest Shoes
+                <ItemListContainer section="Latest Shoes" />
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#Create">
-                Create your own shoes
+                <ItemListContainer section="Create your own shoes" />
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="#carrito">
