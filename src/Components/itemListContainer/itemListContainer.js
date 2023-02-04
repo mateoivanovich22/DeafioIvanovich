@@ -1,5 +1,4 @@
-import './style.css';
 
-export default function itemListContainer( {section} ) {
-    return <p className="navNameSections">{section}</p>
+export default function ItemListContainer( {greeting} ) {
+    return <div>{greeting}</div>
 }
