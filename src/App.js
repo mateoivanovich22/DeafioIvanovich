@@ -4,6 +4,7 @@ import background from './assets/img/fondoIndex.jpg';
 import fotoMain from './assets/img/modelo2.png';
 import ItemListContainer from './Components/ItemListContainer/ItemListContainer';
 
+
 function App() {
   return (
     <div className="App" style={{backgroundImage: `url(${background})`}}>
