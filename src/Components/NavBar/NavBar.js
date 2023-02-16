@@ -5,14 +5,14 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import './style.css'
-
+import './style.css';
+// import { Link } from "react-router-dom";
 
 export default function NavBar() {
   return (
     <Navbar bg="light" id="nav">
       <Container fluid>
-        <Navbar.Brand href="#" id="nombreNav"> Home</Navbar.Brand>
+        <Nav.Link href="/Home" id="nombreNav"> Home</Nav.Link>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -20,7 +20,7 @@ export default function NavBar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#Shoes">Shoes</Nav.Link>
+            <Nav.Link href="/Shoes">Shoes</Nav.Link>
             <Nav.Link href="#Contact">Contact</Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#Discount">Discount</NavDropdown.Item>

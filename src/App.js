@@ -1,23 +1,30 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import NavBar from './Components/NavBar/NavBar';
-import background from './assets/img/fondoIndex.jpg';
-import fotoMain from './assets/img/modelo2.png';
-import ItemListContainer from './Components/ItemListContainer/ItemListContainer';
+import ItemListContainer from './pages/ItemListContainer/ItemListContainer';
+
 
 
 function App() {
   return (
-    <div className="App" style={{backgroundImage: `url(${background})`}}>
-      <header>   
-        <h1>Naike Shoes.</h1>
-        <NavBar/>       
+    <div className="App" style={{backgroundImage: `url(${'./img/fondoIndex.jpg'})`}}>
+      <header> 
+        <h1 style={{padding:'25px'}}>Naike Shoes.</h1>
+        <BrowserRouter>
+          <NavBar/>
+          <Routes>
+            <Route path='/shoes' element={<ItemListContainer/>} />
+          </Routes>
+        </BrowserRouter>
+        
       </header>
       <main>
         <div>
-          <img src={fotoMain} alt="modelo main" />
-          
+          <img src={'./img/modelo2.png'} alt="modelo main" />  
         </div>
-        <ItemListContainer greeting="Bienvenido a mi pagina de zapatillas!" />
+        <div>
+          {/* <ItemListContainer/> */}
+        </div>
       </main>
 
       <footer>
@@ -27,5 +34,28 @@ function App() {
     
   );
 }
+/*
+function App() {
+  return (
+    <div className="App" style={{backgroundImage: `url(${'./img/fondoIndex.jpg'})`}}>
+      <header> 
+        <h1 style={{padding:'25px'}}>Naike Shoes.</h1>
+        <NavBar/>
+      </header>
+      <main>
+        <div>
+          <img src={'./img/modelo2.png'} alt="modelo main" />  
+        </div>
+        <div>
+          <ItemListContainer/>
+        </div>
+      </main>
 
+      <footer>
+
+      </footer>
+    </div>
+    
+  );
+}*/
 export default App;
