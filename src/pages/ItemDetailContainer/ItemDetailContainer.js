@@ -10,7 +10,7 @@ const ItemDetailContainer = () => {
 
   const getProduct = new Promise((resolve, reject) => {
     setTimeout(() => {
-      const findProducts = products.find( item => item.id == id)
+      const findProducts = products.find( item => item.id === id)
       resolve(findProducts)
     }, 1000)
   });
@@ -21,7 +21,7 @@ const ItemDetailContainer = () => {
       setDetailObject(response)
     })
     .catch((error) => {console.log(error)});
-  }, [])
+  },)
 
   return (
     <div className="itemDetail">

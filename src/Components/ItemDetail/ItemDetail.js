@@ -17,7 +17,7 @@ const ItemDetail = ({detail}) => {
   return (
     <div className="detail">
       <div className="detailHijo" >
-        <img src={detail.image} width="200px"/>
+        <img alt="imagen de producto" src={detail.image} width="200px"/>
         <h2>{detail.name}</h2>
         <h3>{detail.price}</h3>
         <ItemCount count={count} setCount={setCount}/>
