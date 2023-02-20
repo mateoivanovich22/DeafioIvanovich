@@ -1,0 +1,11 @@
+.counter{
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hijoCounter{
+    display: flex;
+    justify-content: space-around;
+}

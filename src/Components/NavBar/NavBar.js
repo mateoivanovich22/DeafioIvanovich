@@ -6,13 +6,13 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './style.css';
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
   return (
     <Navbar bg="light" id="nav">
       <Container fluid>
-        <Nav.Link href="/Home" id="nombreNav"> Home</Nav.Link>
+        <Nav.Link as={Link} to="/" id="nombreNav"> Home</Nav.Link>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -20,10 +20,12 @@ export default function NavBar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="/Shoes">Shoes</Nav.Link>
-            <Nav.Link href="#Contact">Contact</Nav.Link>
+            <Nav.Link as={Link} to="/allclothes">All clothes</Nav.Link>
+            <Nav.Link as={Link} to="/category/shoes">Shoes</Nav.Link>
+            <Nav.Link as={Link} to="/category/socks">Socks</Nav.Link>
+            <Nav.Link as={Link} to="/category/t-shirts">T-shirts</Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#Discount">Discount</NavDropdown.Item>
+              <NavDropdown.Item href="#Contact">Contact</NavDropdown.Item>
               <NavDropdown.Item href="#Latest Shoes">
                 Latest Shoes
               </NavDropdown.Item>

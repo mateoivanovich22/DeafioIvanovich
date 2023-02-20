@@ -1,61 +1,30 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import NavBar from './Components/NavBar/NavBar';
 import ItemListContainer from './pages/ItemListContainer/ItemListContainer';
-
-
+import Header from './Components/Header/Header';
+import Main from './Components/Main/Main';
+import Footer from './Components/Footer/Footer';
+import ItemDetailContainer from './pages/ItemDetailContainer/ItemDetailContainer';
+import Cart from './pages/Cart/Cart'
 
 function App() {
   return (
     <div className="App" style={{backgroundImage: `url(${'./img/fondoIndex.jpg'})`}}>
-      <header> 
-        <h1 style={{padding:'25px'}}>Naike Shoes.</h1>
-        <BrowserRouter>
-          <NavBar/>
-          <Routes>
-            <Route path='/shoes' element={<ItemListContainer/>} />
-          </Routes>
-        </BrowserRouter>
-        
-      </header>
-      <main>
-        <div>
-          <img src={'./img/modelo2.png'} alt="modelo main" />  
-        </div>
-        <div>
-          {/* <ItemListContainer/> */}
-        </div>
-      </main>
-
-      <footer>
-
-      </footer>
+      <BrowserRouter>
+        <Header/>
+        <Routes>
+          <Route path='/' element={<Main/>} />
+          <Route path='/allclothes' element={<ItemListContainer section={"All Clothes"}/>} />
+          <Route path='/category/:categoryId' element={<ItemListContainer />} />
+          <Route path='/item/:id' element={<ItemDetailContainer/>} />
+          <Route path='/cart' element={<Cart/>} />
+        </Routes>  
+        <Footer/>
+      </BrowserRouter>
+      
     </div>
-    
   );
 }
-/*
-function App() {
-  return (
-    <div className="App" style={{backgroundImage: `url(${'./img/fondoIndex.jpg'})`}}>
-      <header> 
-        <h1 style={{padding:'25px'}}>Naike Shoes.</h1>
-        <NavBar/>
-      </header>
-      <main>
-        <div>
-          <img src={'./img/modelo2.png'} alt="modelo main" />  
-        </div>
-        <div>
-          <ItemListContainer/>
-        </div>
-      </main>
 
-      <footer>
 
-      </footer>
-    </div>
-    
-  );
-}*/
 export default App;
