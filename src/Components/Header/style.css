@@ -8,3 +8,7 @@ header {
     font-size: 20px;
     color: white;
 }
+
+h1{
+    padding:'25px';
+}

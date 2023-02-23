@@ -1,4 +1,33 @@
 footer{
     background-color: black;
-    padding: 154px;
+    padding: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.footerInfo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    padding: 20px;
+}
+
+.footerIcons{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footerIcons img{
+    width: 100px;
+    padding: 10px;
+}
+
+.footerIcons img:hover{
+    transition: transform 1.3s;
+    transform: scale(1.5);
 }

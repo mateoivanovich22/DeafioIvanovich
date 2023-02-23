@@ -8,3 +8,8 @@
     justify-content: center;
     height: 600px;
 }
+
+.itemContainer:hover{
+    transition: transform 0.3s;
+    transform: scale(1.03);
+}

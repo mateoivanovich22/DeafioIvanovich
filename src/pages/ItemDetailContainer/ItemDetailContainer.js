@@ -10,9 +10,9 @@ const ItemDetailContainer = () => {
 
   const getProduct = new Promise((resolve, reject) => {
     setTimeout(() => {
-      const findProducts = products.find( item => item.id === id)
+      const findProducts = products.find( item => item.id === parseInt(id))
       resolve(findProducts)
-    }, 1000)
+    }, 500)
   });
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const ItemDetailContainer = () => {
   return (
     <div className="itemDetail">
       <ItemDetail detail={detailObject} />
-
     </div>
   )
 }

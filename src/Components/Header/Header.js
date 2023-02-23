@@ -4,7 +4,7 @@ import "./style.css"
 const Header = () => {
   return (
     <header>
-        <h1 style={{padding:'25px'}}>Naike Clothes.</h1>      
+        <h1>Naike Clothes.</h1>      
         <NavBar/>
     </header>
   )

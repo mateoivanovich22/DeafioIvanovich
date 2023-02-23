@@ -11,7 +11,6 @@ const Item = ({product}) => {
         <Card.Body>
           <Card.Title>{product.name}</Card.Title>
           <Card.Text>
-            {product.description}
             {product.price}
           </Card.Text>
         </Card.Body>

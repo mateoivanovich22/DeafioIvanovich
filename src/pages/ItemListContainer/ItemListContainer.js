@@ -3,7 +3,7 @@ import { products } from "../../data/products"
 import ItemList from "../../Components/ItemList/ItemList"
 import { useParams } from "react-router-dom";
 
-const ItemListContainer = ({section}) => {
+const ItemListContainer = () => {
     
     const [productList, setProductList] = useState([])
 
@@ -14,11 +14,11 @@ const ItemListContainer = ({section}) => {
             const filteredProducts = products.filter((item) => item.category === categoryId);
             setTimeout(() => {
                 resolve(filteredProducts)
-            }, 1000)
+            }, 500)
         }else{
             setTimeout(() => {
                 resolve(products)
-            }, 1000)
+            }, 500)
         }
     });
 
@@ -31,7 +31,7 @@ const ItemListContainer = ({section}) => {
     }, [categoryId])
 
   return <div>
-    <h1 style={{padding:"30px", textDecoration:"underline", marginTop: "60px"}}>{section}</h1>
+    <h1 style={{textDecoration:"underline", marginTop: "50px"}}>{categoryId}</h1>
     <ItemList productList={productList}/>
   </div>
 

@@ -9,15 +9,13 @@ const ItemCount = ({ count, setCount}) => {
     }
 
     const restar = () => {
-        if(count === 0){
+        if(count === 1){
             return;
         }
         setCount(count - 1);
     }
   return (
     <div className="counter">
-
-        <h2>Agregar.</h2>
         <div className="hijoCounter">
             <ButtonGroup >
                 <Button onClick={restar} variant="secondary">-</Button>
