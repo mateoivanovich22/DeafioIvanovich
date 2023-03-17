@@ -3,14 +3,23 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBNlTtgQmFZEyAJfun8-uQ6sw8lJqAtwxs",
+  authDomain: "naikeecommerce.firebaseapp.com",
+  projectId: "naikeecommerce",
+  storageBucket: "naikeecommerce.appspot.com",
+  messagingSenderId: "447442529056",
+  appId: "1:447442529056:web:6c9f10305b0e69be66c545"
+};
+
+const app = initializeApp(firebaseConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+root.render(
+  // <React.StrictMode>
+    <App />
+  // </React.StrictMode>
+);

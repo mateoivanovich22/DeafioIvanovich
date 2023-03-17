@@ -14,13 +14,14 @@ const ItemCount = ({ count, setCount}) => {
         }
         setCount(count - 1);
     }
+    
   return (
     <div className="counter">
         <div className="hijoCounter">
             <ButtonGroup >
-                <Button onClick={restar} variant="secondary">-</Button>
+                <Button disabled={count === 0} onClick={restar} variant="secondary">-</Button>
                 <Button variant="secondary" disabled>{count}</Button>
-                <Button onClick={onAdd} variant="secondary">+</Button>
+                <Button disabled={count === 0} onClick={onAdd} variant="secondary">+</Button>
             </ButtonGroup>
         </div>
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { products } from "../../data/products"
 import ItemList from "../../Components/ItemList/ItemList"
 import { useParams } from "react-router-dom";
+import { getFirestore, getDocs, collection, query, where} from 'firebase/firestore'
 
 const ItemListContainer = () => {
     
@@ -9,29 +9,33 @@ const ItemListContainer = () => {
 
     const {categoryId} = useParams();
 
-    const getProducts = new Promise((resolve, reject) => {
-        if(categoryId){
-            const filteredProducts = products.filter((item) => item.category === categoryId);
-            setTimeout(() => {
-                resolve(filteredProducts)
-            }, 500)
-        }else{
-            setTimeout(() => {
-                resolve(products)
-            }, 500)
-        }
-    });
+    const getProducts = () => {
+        const db = getFirestore();
+        const queryBase = collection(db, 'products');
+
+        const querySnapshot = categoryId
+            ? query(queryBase, where('category', '==', categoryId))
+            : queryBase
+
+            getDocs(querySnapshot)
+                .then((response) => {
+                    const list = response.docs.map((doc) => {
+                        return {
+                            id: doc.id,
+                            ...doc.data()
+                        }
+                    })
+                    setProductList(list) 
+                })
+                .catch((error) => console.log(error))
+    }
 
     useEffect(() => {
-        getProducts
-        .then((response) => {
-            setProductList(response)
-        })
-        .catch((err) => {console.log(err)});
+        getProducts();
     }, [categoryId])
 
   return <div>
-    <h1 style={{textDecoration:"underline", marginTop: "50px"}}>{categoryId}</h1>
+    <h1 style={{textDecoration:"underline", marginTop: "50px", fontFamily:"fantasy", fontSize:"60px"}}>{categoryId === undefined ? "All Clothes." : categoryId}</h1>
     <ItemList productList={productList}/>
   </div>
 

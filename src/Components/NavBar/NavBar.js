@@ -34,7 +34,7 @@ export default function NavBar() {
                 Create your own shoes
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="#carrito">
+            <Nav.Link as={Link} to="/cart">
               <CardWidget cantidadCarrito={4}/>
             </Nav.Link>
           </Nav>
