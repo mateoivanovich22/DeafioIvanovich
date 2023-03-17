@@ -1,15 +1,12 @@
-
-
-.navBarBootstrap{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.navBarBootstrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#nombreNav{
-    color: black;
-    padding: 5px;
-    font-size: 24px;
-    margin-bottom: 5px;
+#nombreNav {
+  color: black;
+  padding: 5px;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
-

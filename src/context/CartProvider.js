@@ -1,26 +1,26 @@
-import {CartContext} from "./CartContext"
-import { useState, useEffect} from "react"
+import { CartContext } from "./CartContext";
+import { useState, useEffect } from "react";
 
-const CartProvider = ({children}) => {
-  const [cart, setCart] = useState([])
-  const [total, setTotal] = useState(0)
+const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0);
 
-  useEffect(() =>{
-    setTotal(cart.reduce((acc, curr) => acc + curr.price * curr.quantity, 0))
-  }, [cart])
+  useEffect(() => {
+    setTotal(cart.reduce((acc, curr) => acc + curr.price * curr.quantity, 0));
+  }, [cart]);
 
   const addItem = (item, quantity) => {
-    if( isInCart(item.id)){
+    if (isInCart(item.id)) {
       const newCart = cart.map((product) => {
-        if(product.id === item.id) {
-          product.quantity = product.quantity + quantity
+        if (product.id === item.id) {
+          product.quantity = product.quantity + quantity;
           return product;
-        }else{
+        } else {
           return product;
         }
       });
       setCart(newCart);
-    }else {
+    } else {
       const product = {
         id: item.id,
         name: item.name,
@@ -28,53 +28,50 @@ const CartProvider = ({children}) => {
         price: item.price,
         category: item.category,
         quantity: quantity,
-        stock: item.stock ,
+        stock: item.stock,
         image: item.image,
-      }
-      setCart([...cart, product])
-
+      };
+      setCart([...cart, product]);
     }
-    
-  }
+  };
 
   const clear = () => {
-    setCart([])
-  }
+    setCart([]);
+  };
 
-  const removeItem = (productId) =>{
-
-    setCart(cart.filter((product) => product.id !== productId))
-    
-  }
+  const removeItem = (productId) => {
+    setCart(cart.filter((product) => product.id !== productId));
+  };
 
   const isInCart = (productId) => {
-    if(cart.find((product) => product.id === productId)){
+    if (cart.find((product) => product.id === productId)) {
       return true;
-    }else {
+    } else {
       return false;
     }
-  }
+  };
 
   const updateItem = (productId, newQuantity) => {
     const newCart = cart.map((product) => {
-      if(productId === product.id){
+      if (productId === product.id) {
         return {
           ...product,
-          quantity: newQuantity
-        }
-      }else{
+          quantity: newQuantity,
+        };
+      } else {
         return product;
       }
-    })
-    setCart(newCart)
-  }
-
+    });
+    setCart(newCart);
+  };
 
   return (
-    <CartContext.Provider value={{cart, addItem, clear, removeItem, total, updateItem}}>
+    <CartContext.Provider
+      value={{ cart, addItem, clear, removeItem, total, updateItem }}
+    >
       {children}
     </CartContext.Provider>
-  )
-}
+  );
+};
 
-export default CartProvider
+export default CartProvider;

@@ -1,23 +1,23 @@
-main{
-    display: flex;
-    flex-direction: column;
-    padding: 80px;
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 80px;
 }
 
-.tituloMain{
-    font-size: 70px;
-    font-family: Georgia, 'Times New Roman', Times, serif ;
-    text-decoration: underline;
-    margin-bottom: 60px;
+.tituloMain {
+  font-size: 70px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  text-decoration: underline;
+  margin-bottom: 60px;
 }
 
-.imagenSuperior{
-    padding: 50px;
+.imagenSuperior {
+  padding: 50px;
 }
 
-.shopNow{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+.shopNow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

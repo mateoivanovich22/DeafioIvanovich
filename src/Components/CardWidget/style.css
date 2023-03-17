@@ -1,19 +1,19 @@
-.divCardWidget{
-    padding: 20px;
-    margin-top: 32px;
+.divCardWidget {
+  padding: 20px;
+  margin-top: 32px;
 }
 
-.divCardWidget img{
-    width: 25px;
-    height: 25px;
-    transition: transform 0.3s;
+.divCardWidget img {
+  width: 25px;
+  height: 25px;
+  transition: transform 0.3s;
 }
 
-.divCardWidget img:hover{
-    transform: scale(1.5);
+.divCardWidget img:hover {
+  transform: scale(1.5);
 }
 
-.divCardWidget p{
-    font-size: 15px;
-    color: red;
+.divCardWidget p {
+  font-size: 15px;
+  color: red;
 }

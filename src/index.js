@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -11,15 +11,15 @@ const firebaseConfig = {
   projectId: "naikeecommerce",
   storageBucket: "naikeecommerce.appspot.com",
   messagingSenderId: "447442529056",
-  appId: "1:447442529056:web:6c9f10305b0e69be66c545"
+  appId: "1:447442529056:web:6c9f10305b0e69be66c545",
 };
 
 initializeApp(firebaseConfig);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   // <React.StrictMode>
-    <App />
+  <App />
   // </React.StrictMode>
 );

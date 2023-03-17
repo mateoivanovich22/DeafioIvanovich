@@ -1,12 +1,12 @@
-.counter{
-    width: 300px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding: 10px;
+.counter {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
 }
 
-.hijoCounter{
-    display: flex;
-    justify-content: space-around;
+.hijoCounter {
+  display: flex;
+  justify-content: space-around;
 }
