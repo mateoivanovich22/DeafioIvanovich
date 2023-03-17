@@ -4,13 +4,20 @@ main{
     padding: 80px;
 }
 
+.tituloMain{
+    font-size: 70px;
+    font-family: Georgia, 'Times New Roman', Times, serif ;
+    text-decoration: underline;
+    margin-bottom: 60px;
+}
+
 .imagenSuperior{
     padding: 50px;
 }
 
-.imagenesInferiores{
+.shopNow{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }

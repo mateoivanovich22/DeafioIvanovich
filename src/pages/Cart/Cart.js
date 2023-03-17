@@ -15,12 +15,13 @@ const Cart = () => {
 
   const [abrirFormulario, setAbrirFormulario ] = useState(false)
   const [nuevoCliente, setNuevoCliente] = useState(false)
-
+  const [idCompra, setIdCompra] = useState(0)
 
   const [formValue, setFormValue] = useState({
     name: '',
     phone: '',
     email: '',
+    email2: '',
   })
 
   let styleClearAll = {
@@ -30,35 +31,43 @@ const Cart = () => {
     padding:"20px"
   }  
 
+  
 
   const createOrder = (event) => {
     event.preventDefault();
-    const db = getFirestore();
-    const querySnapshot = collection(db, 'orders');
+    
 
-    addDoc(querySnapshot, {
-      buyer: {
-        email: formValue.email,
-        name: formValue.name,
-        phone: formValue.phone,
-      },
-      products: cart.map((product) => {
-        return {
-          name: product.name,
-          price: product.price,
-          id: product.id,
-          quantity: product.quantity
-        }
-      }),
-      total: total,
-    })
-    .then(() => {
-      updateStocks(db)
-    })
-    .catch((err) => console.log(err))
-    setAbrirFormulario(false)
-    setNuevoCliente(true)
-    clear([])
+    if(formValue.email !== formValue.email2 || formValue.email === '' || formValue.name === '' || formValue.phone === ''){
+      alert("Some of your information is incorrect")
+    }else{
+      const db = getFirestore();
+      const querySnapshot = collection(db, 'orders');
+
+      addDoc(querySnapshot, {
+        buyer: {
+          email: formValue.email,
+          name: formValue.name,
+          phone: formValue.phone,
+        },
+        products: cart.map((product) => {
+          return {
+            name: product.name,
+            price: product.price,
+            id: product.id,
+            quantity: product.quantity
+          }
+        }),
+        total: total,
+      })
+      .then((response) => {
+        setIdCompra( response.id );
+        updateStocks(db)
+      })
+      .catch((err) => console.log(err))
+      setAbrirFormulario(false)
+      setNuevoCliente(true)
+      clear([])
+    }
   };
 
   const updateStocks = (db) => {
@@ -95,17 +104,13 @@ const Cart = () => {
         </div>}
       {cart.length > 0  && <div>
           <ItemCartList/>
-          <div style={styleClearAll}>
-            <button className="clearAll" onClick={() => clear([])} variant="secondary" size="lg" >Clear all cart</button>
-            <h3>{`Total price: ${total}$`}</h3>
-            <button onClick={() => setAbrirFormulario(true)}>Completar compra</button>
-          </div>
-
           {abrirFormulario && <div>
           <Form className="formularioBootstrap">
             <Form.Group className="mb-3">
               <Form.Label>Email address</Form.Label>
               <Form.Control name="email" type="email" placeholder="Enter email" value={formValue.email} onChange={handleInput} />
+              <Form.Label>Confirm Email address</Form.Label>
+              <Form.Control name="email2" type="email" placeholder="Enter email" value={formValue.email2} onChange={handleInput} />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
               </Form.Text>
@@ -121,18 +126,25 @@ const Cart = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Check type="checkbox" label="Accept all terms" />
-            </Form.Group>
+          </Form.Group>
             <Button onClick={ createOrder  } variant="primary">
-              Buy
+              Create order
             </Button>
           </Form>
+            
           </div>}
+          <div style={styleClearAll}>
+            <button className="clearAll" onClick={() => clear([])} variant="secondary" size="lg" >Clear all cart</button>
+            <h3>{`Total price: ${total}$`}</h3>
+            <Button style={{backgroundColor:"white", color:"blue"}} onClick={() => setAbrirFormulario(true)}>Finish shopping</Button>
+          </div>
+
           
         </div>}
       {nuevoCliente && <div style={{width:"70%", backgroundColor:"white", padding:"20px"}}>
         <h1>Thank you for purchasing our products, an email will soon be arriving in your mailbox, where you can see the status of your purchase.</h1>
         <Alert variant={'success'}>
-          Your purchase has been stored correctly !
+          Your purchase has been stored correctly, your ID for the purchase is: {idCompra} !
         </Alert>
         </div>}
     </div>

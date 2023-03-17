@@ -5,10 +5,10 @@ const Main = () => {
   return (
     <main>
         <div className="imagenSuperior">
+          <h1 className="tituloMain" >Naike Clothes</h1>
           <img src={'/img/modelo2.png'} alt="modelo main" />  
         </div>
-        <div className="imagenesInferiores">
-          <img alt="modelo 1" src={'/img/modelo1.webp'} width="550px" height={"400px"}/>
+        <div className="shopNow">
           <Link to={"/allclothes"}>
             <button className="cta">
               <span className="hover-underline-animation"> Shop now </span>
@@ -17,8 +17,7 @@ const Main = () => {
               </svg>
             </button>
           </Link>
-          
-          <img alt="modelo 2" src={'/img/modelo3.jpg'} width="550px" height={"400px"}/>
+        
         </div>
     </main>
   )

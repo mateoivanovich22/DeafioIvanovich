@@ -1,3 +1,13 @@
+# Naike Clothes
+
+This website is an E-commerce for Nike clothing. In it you can browse the different categories, adding the clothes you want to buy to the cart and then finalizing the purchase and sending your order to the E-commerce database.
+
+![Alt Text](./NaikeClothes.gif)
+
+# Libraries used
+
+Bootstrap
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

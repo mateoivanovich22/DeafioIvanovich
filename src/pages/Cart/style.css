@@ -173,5 +173,9 @@
     border: 3px outset black;
     padding: 30px;
     background-color: whitesmoke;
-    height: 400px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    width: 700px;
 }
+

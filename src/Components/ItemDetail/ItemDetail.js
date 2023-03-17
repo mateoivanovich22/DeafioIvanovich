@@ -39,8 +39,8 @@ const ItemDetail = ({detail}) => {
                   setCargarBoton("botonRaro")
                   setCargarLoad("noCarga")
                   addItem(detail ,count)
-                }, 3000)
-              }}>Agregar al carrito</button>
+                }, 2000)
+              }}>Add to cart</button>
 
               <div className={cargarLoad}>
                 <div className="loader">
@@ -64,10 +64,10 @@ const ItemDetail = ({detail}) => {
       <div>
         <div className="detailNav">
             <div className="detailNavHijo" > 
-              <Button onClick={() => navigate('/allclothes')} variant="secondary" >Seguir comprando</Button>{' '}
+              <Button style={{width:"200px"}} onClick={() => navigate('/allclothes')} variant="secondary" >Continue shopping</Button>{' '}
             </div>
             <div className="detailNavHijo">
-              <Button onClick={() => navigate('/cart')} variant="secondary">Completar mi compra</Button>{' '}
+              <Button style={{width:"200px"}} onClick={() => navigate('/cart')} variant="secondary">Go to cart</Button>{' '}
             </div>
           </div>
       </div>
