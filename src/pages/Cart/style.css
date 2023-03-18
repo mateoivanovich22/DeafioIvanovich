@@ -12,6 +12,14 @@
   margin-top: 20px;
 }
 
+.nothing{
+  height: 65vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
 .precioFinal {
   display: flex;
   justify-content: center;

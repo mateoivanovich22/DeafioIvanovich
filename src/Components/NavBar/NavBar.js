@@ -35,13 +35,13 @@ export default function NavBar() {
             <Nav.Link as={Link} to="/category/t-shirts">
               T-shirts
             </Nav.Link>
-            <NavDropdown title="More" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#Contact">Contact</NavDropdown.Item>
-              <NavDropdown.Item href="#Latest Shoes">
+            <NavDropdown disabled title="More" id="navbarScrollingDropdown">
+              <NavDropdown.Item disabled>Contact</NavDropdown.Item>
+              <NavDropdown.Item disabled>
                 Latest Shoes
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#Create">
+              <NavDropdown.Item disabled>
                 Create your own shoes
               </NavDropdown.Item>
             </NavDropdown>
@@ -56,7 +56,7 @@ export default function NavBar() {
               className="me-2"
               aria-label="Search"
             />
-            <Button variant="outline-success">Search</Button>
+            <Button disabled variant="outline-success">Search</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

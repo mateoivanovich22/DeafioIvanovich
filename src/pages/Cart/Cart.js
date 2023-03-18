@@ -95,7 +95,7 @@ const Cart = () => {
     <div className="CartContainer">
       <h1 className="tituloCart">Cart</h1>
       {cart.length === 0 && !nuevoCliente && (
-        <div>
+        <div className="nothing">
           <h2>There is nothing in the cart!!!</h2>
           <button
             className="botonAllClothes"

@@ -14,7 +14,7 @@ const ItemCart = ({ product }) => {
   }, [quantity]);
 
   return (
-    <Card style={{ width: "17rem", height: "469px", margin: "25px" }}>
+    <Card style={{ width: "17rem", height: "46 9px", margin: "25px" }}>
       <Card.Img variant="top" src={`/img/${product.image}`} />
       <Card.Body className="cardBody">
         <Card.Title>{product.name}</Card.Title>
