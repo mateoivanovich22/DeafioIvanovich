@@ -35,29 +35,11 @@ export default function NavBar() {
             <Nav.Link as={Link} to="/category/t-shirts">
               T-shirts
             </Nav.Link>
-            <NavDropdown disabled title="More" id="navbarScrollingDropdown">
-              <NavDropdown.Item disabled>Contact</NavDropdown.Item>
-              <NavDropdown.Item disabled>
-                Latest Shoes
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item disabled>
-                Create your own shoes
-              </NavDropdown.Item>
-            </NavDropdown>
             <Nav.Link as={Link} to="/cart">
               <CardWidget cantidadCarrito={4} />
             </Nav.Link>
           </Nav>
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button disabled variant="outline-success">Search</Button>
-          </Form>
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>
