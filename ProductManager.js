@@ -1,68 +1,149 @@
+const fs = require("fs");
+
 class ProductManager {
+  constructor(ruta) {
+    this.filePath = ruta;
+  }
 
-    constructor(){
-        this.products = []
+  async getProducts() {
+    try {
+      const data = await fs.promises.readFile(this.filePath, "utf-8");
+      console.log(JSON.parse(data));
+    } catch (error) {
+      console.error("Error leyendo el archivo:", error);
+      return [];
     }
+  }
 
-    getProducts(){
-        console.log(this.products)
+  async getProductById(id) {
+    try {
+      const data = await fs.promises.readFile(this.filePath, "utf-8");
+      const products = JSON.parse(data);
+      const product = products.find((product) => product.id === id);
+
+      if (product) {
+        console.log(product);
+      } else {
+        console.error("Producto no encontrado");
+      }
+    } catch (error) {
+      console.error("Error leyendo el archivo:", error);
     }
+  }
 
-    getProductById(id){
-        let realId = false;
-        let positionProduct = 0;
-        for(let i = 0; i < this.products.length; i++){
-            if( id === this.products[i].id){
-                realId = true;
-                positionProduct = i;
-                break;
-            }
+  async addProduct(newProduct) {
+    if (
+      !newProduct.title ||
+      !newProduct.description ||
+      !newProduct.price ||
+      !newProduct.thumbnail ||
+      !newProduct.code ||
+      !newProduct.stock
+    ) {
+      console.error("Error al agregar el producto, falta un campo");
+    } else {
+      try {
+        const data = await fs.promises.readFile(this.filePath, "utf-8");
+        const products = JSON.parse(data);
+        const productExists = products.find(
+          (product) => product.code === newProduct.code
+        );
+        if (productExists) {
+          console.error(
+            `Error al agregar el producto, el código ${newProduct.code} ya existe`
+          );
+        } else {
+          const lastProduct = products[products.length - 1];
+          const newId = lastProduct ? lastProduct.id + 1 : 1;
+          const productWithId = { ...newProduct, id: newId };
+          products.push(productWithId);
+          await fs.promises.writeFile(this.filePath, JSON.stringify(products));
+          console.log("Producto agregado:", productWithId);
         }
-        if(realId){
-            console.log(this.products[positionProduct])
-        }else{
-            console.error("Not found")
-        }
+      } catch (error) {
+        console.error("Error leyendo el archivo:", error);
+      }
     }
+  }
 
-    addProduct(title, description, price, thumbnail, code, stock){
-        const id = this.products.length + 1;
+  async updateProduct(id, fieldToUpdate) {
+    try {
+      const data = await fs.promises.readFile(this.filePath, "utf-8");
+      const products = JSON.parse(data);
+      const productIndex = products.findIndex((product) => product.id === id);
 
-        const product = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-            id
+      if (productIndex === -1) {
+        console.log(`Producto con id ${id} no encontrado`);
+      } else {
+        if (
+          ![
+            "title",
+            "description",
+            "price",
+            "thumbnail",
+            "stock",
+            "code",
+          ].includes(fieldToUpdate.field)
+        ) {
+          console.log(`El campo "${fieldToUpdate.field}" no es válido`);
+        } else {
+          const updatedProduct = {
+            ...products[productIndex],
+            [fieldToUpdate.field]: fieldToUpdate.value,
+          };
+
+          products[productIndex] = updatedProduct;
+
+          await fs.promises.writeFile(this.filePath, JSON.stringify(products));
+          console.log(`Producto con id ${id} modificado`, updatedProduct);
         }
-
-        let codeRepetido = false;
-
-        for(let i = 0; i < this.products.length; i++){
-            if( code === this.products[i].code){
-                codeRepetido = true;
-                break;
-            }
-        }
-
-        if(!codeRepetido && title !== undefined && description !== undefined && price !== undefined && thumbnail !== undefined && code !== undefined && stock !== undefined ){    
-            this.products.push(product)
-        }else{
-            console.error("ERROR AL AGREGAR PRODUCTO ALGUN CAMPO ESTA MAL")
-        }
-    
+      }
+    } catch (error) {
+      console.error("Error modificando producto:", error);
     }
+  }
+
+  async deleteProduct(id) {
+    try {
+      const data = await fs.promises.readFile(this.filePath, "utf-8");
+      let products = JSON.parse(data);
+      const productIndex = products.findIndex((product) => product.id === id);
+
+      if (productIndex === -1) {
+        console.log(`Producto con id ${id} no encontrado`);
+      } else {
+        const deletedProduct = products[productIndex];
+        products.splice(productIndex, 1);
+
+        await fs.promises.writeFile(this.filePath, JSON.stringify(products));
+        console.log(`Producto con id ${id} eliminado`, deletedProduct);
+      }
+    } catch (error) {
+      console.error("Error borrando el producto:", error);
+    }
+  }
 }
 
 // EJEMPLO DE PRUEBA
 /*
-const productManager = new ProductManager()
+const productManager = new ProductManager("./ejemplo.txt");
 
-productManager.addProduct("Oreos", "Galletitas blancas y negras", 25, "asdcfg.gif", 355, 5);
-productManager.addProduct("Milka", "Chocolate blanco", 15, "ddddg.gif", 200, 6)
+const newProduct = {
+  title: "jorigto",
+  description: "alfajor triple",
+  price: 16,
+  thumbnail: "jorgi.gif",
+  code: 10,
+  stock: 5,
+};
 productManager.getProducts();
+productManager.addProduct(newProduct)
+
+const fieldToUpdate = {
+  field: "title",
+  value: "melva",
+};
+
+productManager.updateProduct(3, fieldToUpdate)
 productManager.getProductById(6);
-productManager.getProductById(2);
 */

@@ -1,0 +1,1 @@
+[{"title":"Oreo","description":"galletita blanca y negra","price":55,"thumbnail":"std.gif","code":333,"stock":2,"id":1},{"title":"macumba","description":"galletitas ricas","price":56,"thumbnail":"sois.gif","code":44,"stock":5,"id":2},{"title":"rumba","description":"galletitas feas","price":56,"thumbnail":"sois.gif","code":54,"stock":5,"id":3}]
