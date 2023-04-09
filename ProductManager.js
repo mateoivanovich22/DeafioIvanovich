@@ -8,7 +8,8 @@ class ProductManager {
   async getProducts() {
     try {
       const data = await fs.promises.readFile(this.filePath, "utf-8");
-      console.log(JSON.parse(data));
+      //console.log(JSON.parse(data));
+      return JSON.parse(data)
     } catch (error) {
       console.error("Error leyendo el archivo:", error);
       return [];
@@ -17,17 +18,18 @@ class ProductManager {
 
   async getProductById(id) {
     try {
-      const data = await fs.promises.readFile(this.filePath, "utf-8");
+      const data = await fs.promises.readFile(this.filePath, 'utf-8');
       const products = JSON.parse(data);
       const product = products.find((product) => product.id === id);
-
+  
       if (product) {
-        console.log(product);
+        return product;
       } else {
-        console.error("Producto no encontrado");
+        return null;
       }
     } catch (error) {
-      console.error("Error leyendo el archivo:", error);
+      console.error('Error leyendo el archivo:', error);
+      return null;
     }
   }
 
@@ -123,6 +125,8 @@ class ProductManager {
     }
   }
 }
+
+module.exports = ProductManager;
 
 // EJEMPLO DE PRUEBA
 /*
