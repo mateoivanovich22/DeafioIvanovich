@@ -5,16 +5,18 @@ const router = Router();
 let carts = [];
 let lastId = 0;
 let products = [];
-/*let productsOfFile = [];
+let productsOfFile = [];
 
 async function readProductsFromFile() {
   try {
-    const data = await fs.promises.readFile('products.json');
+    const data = await fs.promises.readFile("products.json");
     productsOfFile = JSON.parse(data);
   } catch (error) {
     console.error(`Error al leer el archivo: ${error}`);
   }
-}*/
+}
+
+readProductsFromFile();
 
 const writeCartsToFile = async (fileName) => {
   try {
@@ -29,15 +31,13 @@ const writeCartsToFile = async (fileName) => {
   }
 };
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const newId = lastId + 1;
   lastId = newId;
 
-  //readProductsFromFile();
-
   const newCart = {
     id: newId,
-    products: [/*productsOfFile*/],
+    products: [],
   };
 
   carts.push(newCart);
@@ -60,9 +60,23 @@ router.get("/:cid", (req, res) => {
 });
 
 router.post("/:cid/product/:pid", (req, res) => {
+  const { quantity } = req.body;
+
+  if (!quantity || quantity <= 0) {
+    return res.status(400).send({
+      message:
+        "La variable 'quantity' debe ser un valor valido y mayor a cero.",
+    });
+  }
+
+  if (!Number.isInteger(quantity)) {
+    return res.status(400).send({
+      message: "La variable 'quantity' debe ser un numero entero.",
+    });
+  }
+
   const cid = parseInt(req.params.cid);
   const pid = parseInt(req.params.pid);
-  const { quantity } = req.body;
 
   const cart = carts.find((cart) => cart.id === cid);
 
@@ -72,10 +86,10 @@ router.post("/:cid/product/:pid", (req, res) => {
     });
   }
 
-  const product = products.find((product) => product.id === pid);
+  const product = productsOfFile.find((product) => product.id === pid);
 
   if (!product) {
-    res.status(404).send({
+    return res.status(404).send({
       message: `El producto con el id ${pid} no existe.`,
     });
   }
@@ -88,9 +102,9 @@ router.post("/:cid/product/:pid", (req, res) => {
     existingProduct.quantity += quantity;
   } else {
     cart.products.push({
-      product: pid,
+      product: { productId: pid },
       quantity: quantity,
-    });  
+    });
   }
 
   writeCartsToFile("carts");

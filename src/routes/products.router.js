@@ -36,7 +36,7 @@ router.get("/:pid", (req, res) => {
   }
 });
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   const {
     title,
     description,
@@ -49,7 +49,7 @@ router.post('/', (req, res) => {
   } = req.body;
 
   if (!title || !description || !code || !price || !stock || !category) {
-    return res.status(400).send('Todos los campos son obligatorios');
+    return res.status(400).send("Todos los campos son obligatorios");
   }
 
   const product = {
@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
 
   writeProductsToFile("products");
 
-  res.send({ status: 'success' });
+  res.send({ status: "success" });
 });
 
 router.put("/:pid", (req, res) => {
@@ -106,21 +106,21 @@ router.put("/:pid", (req, res) => {
     ...req.body,
     id: productId,
   };
-  const productIndex = products.findIndex(p => p.id === productId);
+  const productIndex = products.findIndex((p) => p.id === productId);
   products[productIndex] = updatedProduct;
 
   writeProductsToFile("products");
-  console.log("Producto modificado correctamente")
+  console.log("Producto modificado correctamente");
   res.send({
     status: "success",
     updatedProduct,
   });
 });
 
-router.delete('/:pid', (req, res) => {
+router.delete("/:pid", (req, res) => {
   const productId = parseInt(req.params.pid);
 
-  const index = products.findIndex(product => product.id === productId);
+  const index = products.findIndex((product) => product.id === productId);
 
   if (index !== -1) {
     products.splice(index, 1);
@@ -131,6 +131,5 @@ router.delete('/:pid', (req, res) => {
     res.status(404).send({ error: "Producto no econtrado" });
   }
 });
-
 
 export default router;
