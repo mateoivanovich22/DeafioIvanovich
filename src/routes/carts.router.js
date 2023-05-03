@@ -1,5 +1,5 @@
-import { Router } from "express";
-import fs from "fs";
+const { Router } = require("express");
+const fs = require("fs");
 
 const router = Router();
 let carts = [];
@@ -113,5 +113,5 @@ router.post("/:cid/product/:pid", (req, res) => {
     data: cart,
   });
 });
-
-export default router;
+ 
+module.exports = router;

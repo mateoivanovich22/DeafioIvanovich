@@ -1,5 +1,5 @@
-import { Router } from "express";
-import fs from "fs";
+const { Router } = require("express");
+const fs = require("fs");
 
 const router = Router();
 let products = [];
@@ -10,20 +10,38 @@ const writeProductsToFile = async (fileName) => {
     const productsJSON = JSON.stringify(products);
     const filePath = `${fileName}.json`;
     await fs.promises.writeFile(filePath, productsJSON);
-    console.log(
-      `Los productos se han actualizado correctamente en el archivo ${fileName}`
-    );
   } catch (err) {
     console.error(`Error al escribir en el archivo: ${err}`);
   }
 };
 
-router.get("/", (req, res) => {
-  const limit = parseInt(req.query.limit) || 0;
-  const limitedProducts = limit > 0 ? products.slice(0, limit) : products;
+const loadProductsFromFile = async (fileName) => {
+  try {
+    const filePath = `${fileName}.json`;
+    const data = await fs.promises.readFile(filePath);
+    products = JSON.parse(data.toString());
+    console.log(`Los productos se han cargado correctamente desde el archivo ${fileName}`);
+    return products;
+  } catch (err) {
+    console.error(`Error al cargar el archivo ${fileName}: ${err}`);
+    return [];
+  }
+};
 
-  return res.send(limitedProducts);
+loadProductsFromFile('products');
+
+router.get("/", async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 0;
+    const limitedProducts = limit > 0 ? products.slice(0, limit) : products;
+    console.log(limitedProducts)
+    res.render("home", { products: limitedProducts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error interno del servidor");
+  }
 });
+
 
 router.get("/:pid", (req, res) => {
   const id = parseInt(req.params.pid);
@@ -132,4 +150,5 @@ router.delete("/:pid", (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
+module.exports.loadProductsFromFile = loadProductsFromFile;
