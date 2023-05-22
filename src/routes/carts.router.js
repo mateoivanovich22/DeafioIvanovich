@@ -1,117 +1,99 @@
 const { Router } = require("express");
 const fs = require("fs");
 
-const router = Router();
-let carts = [];
-let lastId = 0;
-let products = [];
-let productsOfFile = [];
+const ProductManagerMongo = require("../dao/controllers/productManager.js")
+const productManagerMongo = new ProductManagerMongo()
 
-async function readProductsFromFile() {
+const CartsManager = require("../dao/controllers/cartsManager.js")
+const cartsManager = new CartsManager();
+const cartsModel = require("../dao/models/carts.js");
+
+const router = Router();
+let productsOfMongo = [];
+let cartsOfMongo = [];
+
+const getCartsAnsProducts = async() => {
   try {
-    const data = await fs.promises.readFile("products.json");
-    productsOfFile = JSON.parse(data);
+    productsOfMongo = await productManagerMongo.getProducts();
+    cartsOfMongo = await cartsManager.getCarts();
+    console.log(cartsOfMongo);
+    return cartsOfMongo;
   } catch (error) {
-    console.error(`Error al leer el archivo: ${error}`);
+    console.error("Error al obtener los productos:", error);
+    return [];
   }
 }
-
-readProductsFromFile();
-
-const writeCartsToFile = async (fileName) => {
-  try {
-    const cartsJSON = JSON.stringify(carts);
-    const filePath = `${fileName}.json`;
-    await fs.promises.writeFile(filePath, cartsJSON);
-    console.log(
-      `Los carritos se han agregado correctamente al archivo ${fileName}`
-    );
-  } catch (err) {
-    console.error(`Error al escribir en el archivo: ${err}`);
-  }
-};
+getCartsAnsProducts()
 
 router.post("/", async (req, res) => {
-  const newId = lastId + 1;
-  lastId = newId;
+  const lastProduct = await cartsModel.findOne().sort({ "products.productId": -1 }).limit(1);
+  const lastProductId = lastProduct ? lastProduct.products.productId : 0;
+  const newProductId = lastProductId + 1;
 
   const newCart = {
-    id: newId,
-    products: [],
+    products: {
+      product: req.body.product,
+      productId: newProductId,
+      quantity: req.body.quantity
+    }
   };
+  
+  try {
+    await cartsManager.createCart(newCart);
 
-  carts.push(newCart);
-  writeCartsToFile("carts");
-  res.status(201).send({
-    message: "El carrito ha sido creado exitosamente.",
-    data: newCart,
-  });
-});
-
-router.get("/:cid", (req, res) => {
-  const cartId = parseInt(req.params.cid);
-  const cart = carts.find((cart) => cart.id === cartId);
-
-  if (!cart) {
-    return res.status(404).send({ message: "Carrito no encontrado" });
+    res.status(201).send({
+      message: "El carrito ha sido creado exitosamente.",
+      data: newCart,
+    });
+  } catch (error) {
+    console.error("Error al crear carrito:", error);
+    res.status(500).send("Error al crear carrito");
   }
-
-  return res.send({ products: cart.products });
 });
 
-router.post("/:cid/product/:pid", (req, res) => {
+
+router.get("/:cid", async(req, res) => {
+  const cartId = req.params.cid;
+  const cart = await cartsManager.getCartById(cartId)
+
+  return res.send({ cart: cart });
+});
+
+router.post("/:cid/product/:pid", async (req, res) => {
   const { quantity } = req.body;
 
   if (!quantity || quantity <= 0) {
     return res.status(400).send({
-      message:
-        "La variable 'quantity' debe ser un valor valido y mayor a cero.",
+      message: "La variable 'quantity' debe ser un valor válido y mayor a cero.",
     });
   }
 
   if (!Number.isInteger(quantity)) {
     return res.status(400).send({
-      message: "La variable 'quantity' debe ser un numero entero.",
+      message: "La variable 'quantity' debe ser un número entero.",
     });
   }
 
-  const cid = parseInt(req.params.cid);
+  const cid = req.params.cid;
   const pid = parseInt(req.params.pid);
 
-  const cart = carts.find((cart) => cart.id === cid);
+  try {
+    const updatedCart = await cartsModel.findOneAndUpdate(
+      { _id: cid, "products.productId": pid },
+      { $set: { "products.quantity": quantity } },
+      { new: true }
+    );
 
-  if (!cart) {
-    return res.status(404).send({
-      message: `El carrito con el id ${cid} no existe.`,
-    });
+    if (!updatedCart) {
+      return res.status(404).send({ message: "El producto no se encuentra en el carrito." });
+    }
+
+    return res.status(200).send({ message: "Cantidad del producto actualizada correctamente." });
+  } catch (error) {
+    console.error("Error al actualizar la cantidad del producto:", error);
+    return res.status(500).send("Error al actualizar la cantidad del producto");
   }
-
-  const product = productsOfFile.find((product) => product.id === pid);
-
-  if (!product) {
-    return res.status(404).send({
-      message: `El producto con el id ${pid} no existe.`,
-    });
-  }
-
-  const existingProduct = cart.products.find(
-    (cartProduct) => cartProduct.product == pid
-  );
-
-  if (existingProduct) {
-    existingProduct.quantity += quantity;
-  } else {
-    cart.products.push({
-      product: { productId: pid },
-      quantity: quantity,
-    });
-  }
-
-  writeCartsToFile("carts");
-  res.send({
-    message: "Producto agregado al carrito correctamente.",
-    data: cart,
-  });
 });
+
  
 module.exports = router;

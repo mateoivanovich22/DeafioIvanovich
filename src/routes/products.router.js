@@ -1,40 +1,31 @@
 const { Router } = require("express");
 const fs = require("fs");
 
+const ProductManagerMongo = require("../dao/controllers/productManager.js")
+const productManagerMongo = new ProductManagerMongo()
+
+
 const router = Router();
-let products = [];
+
 let productId = 0;
 
-const writeProductsToFile = async (fileName) => {
+let products = [];
+const getProducts = async () => {
   try {
-    const productsJSON = JSON.stringify(products);
-    const filePath = `${fileName}.json`;
-    await fs.promises.writeFile(filePath, productsJSON);
-  } catch (err) {
-    console.error(`Error al escribir en el archivo: ${err}`);
-  }
-};
-
-const loadProductsFromFile = async (fileName) => {
-  try {
-    const filePath = `${fileName}.json`;
-    const data = await fs.promises.readFile(filePath);
-    products = JSON.parse(data.toString());
-    console.log(`Los productos se han cargado correctamente desde el archivo ${fileName}`);
+    products = await productManagerMongo.getProducts();
     return products;
-  } catch (err) {
-    console.error(`Error al cargar el archivo ${fileName}: ${err}`);
+  } catch (error) {
+    console.error("Error al obtener los productos:", error);
     return [];
   }
 };
-
-loadProductsFromFile('products');
+getProducts()
 
 router.get("/", async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 0;
+    getProducts()
     const limitedProducts = limit > 0 ? products.slice(0, limit) : products;
-    console.log(limitedProducts)
     res.render("home", { products: limitedProducts });
   } catch (error) {
     console.error(error);
@@ -43,9 +34,10 @@ router.get("/", async (req, res) => {
 });
 
 
-router.get("/:pid", (req, res) => {
-  const id = parseInt(req.params.pid);
-  const product = products.find((p) => p.id === id);
+router.get("/:pid", async(req, res) => {
+  getProducts()
+  const id = req.params.pid;
+  const product = await productManagerMongo.getProductById(id);
 
   if (product) {
     return res.send(product);
@@ -54,7 +46,7 @@ router.get("/:pid", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const {
     title,
     description,
@@ -81,18 +73,16 @@ router.post("/", (req, res) => {
     category,
     thumbnails,
   };
+  getProducts()
 
-  products.push(product);
-
-  console.log(products);
-
-  writeProductsToFile("products");
+  await productManagerMongo.createProduct(product);
 
   res.send({ status: "success" });
 });
 
-router.put("/:pid", (req, res) => {
+router.put("/:pid", async (req, res) => {
   const productIdParam = parseInt(req.params.pid);
+  getProducts()
   const product = products.find((p) => p.id === productIdParam);
 
   if (!product) {
@@ -110,40 +100,35 @@ router.put("/:pid", (req, res) => {
     "category",
     "thumbnails",
   ];
-  const params = Object.keys(req.body);
 
-  const isValidParams = params.every((param) => validParams.includes(param));
+  const fieldsToUpdate = req.body;
+
+  const isValidParams = Object.keys(fieldsToUpdate).every((param) =>
+    validParams.includes(param)
+  );
 
   if (!isValidParams) {
     res.status(400).send("Parámetro inválido");
     return;
   }
 
-  const updatedProduct = {
-    ...product,
-    ...req.body,
-    id: productId,
-  };
-  const productIndex = products.findIndex((p) => p.id === productId);
-  products[productIndex] = updatedProduct;
+  await productManagerMongo.updateProduct(productIdParam, fieldsToUpdate);
 
-  writeProductsToFile("products");
   console.log("Producto modificado correctamente");
+
+  products = await productManagerMongo.getProducts();
   res.send({
     status: "success",
-    updatedProduct,
   });
 });
 
-router.delete("/:pid", (req, res) => {
+
+router.delete("/:pid", async(req, res) => {
   const productId = parseInt(req.params.pid);
+  getProducts()
+  const productDeleted = await productManagerMongo.deleteProduct(productId);
 
-  const index = products.findIndex((product) => product.id === productId);
-
-  if (index !== -1) {
-    products.splice(index, 1);
-
-    writeProductsToFile("products");
+  if (productDeleted) {
     res.send({ status: "success" });
   } else {
     res.status(404).send({ error: "Producto no econtrado" });
@@ -151,4 +136,14 @@ router.delete("/:pid", (req, res) => {
 });
 
 module.exports = router;
-module.exports.loadProductsFromFile = loadProductsFromFile;
+
+/*
+{
+    "title": "selva",
+    "price": 34,
+    "code": 344,
+    "description": "feas",
+    "category": "galles",
+    "stock": 22
+}
+*/

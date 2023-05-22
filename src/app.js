@@ -2,35 +2,21 @@ const express = require("express");
 const { Server } = require("socket.io");
 const handlebars = require("express-handlebars");
 
-const fs = require("fs");
+const ProductManagerMongoose = require("./dao/controllers/productManager.js")
+const productManagerMongoose = new ProductManagerMongoose();
+
+const MessagesManager = require("./dao/controllers/messagesManager.js");
+const messagesManager = new MessagesManager();
+
+let productsOfMongoose = [];
 
 const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 
 const app = express();
-const server = app.listen(8080, () => console.log("Listening"));
+const server = app.listen(8080, () => console.log("Listening on port 8080"));
 const io = new Server(server);
-const logs = [];
-
-const loadProductsFromFile = productsRouter.loadProductsFromFile;
-let products = [];
-
-async function main() {
-  products = await loadProductsFromFile("products");
-}
-
-main();
-
-function saveProducts() {
-  fs.writeFile("products.json", JSON.stringify(products), (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log("Products saved to file");
-    }
-  });
-}
 
 app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", handlebars.engine());
@@ -44,38 +30,35 @@ app.use("/api/products/", productsRouter);
 
 app.use("/api/carts/", cartsRouter);
 
-io.on("connection", (socket) => {
-  console.log("Connected");
-  socket.emit("products", products);
+const getProducts = async () => {
+  try {
+    productsOfMongoose = await productManagerMongoose.getProducts();
+    return productsOfMongoose;
+  } catch (error) {
+    console.error("Error al obtener los productos:", error);
+    return [];
+  }
+};
 
-  socket.on("productCreated", (product) => {
-    const lastProduct = products.slice(-1)[0];
-    const newProductId = lastProduct ? lastProduct.id + 1 : 1;
-    const newProduct = { ...product, id: newProductId };
-    products.push(newProduct);
-    io.emit("products", products);
-    saveProducts();
+io.on("connection", async(socket) => {
+  console.log("Connected to io server");
+  await getProducts()
+  socket.emit("products", productsOfMongoose);
+
+  socket.on("messageCreated", async(message) =>{
+    await messagesManager.createMessage(message);
+  })
+
+  socket.on("productCreated",async (product) => {
+    await productManagerMongoose.createProduct(product);
+    await getProducts();
+    io.emit("products", productsOfMongoose);
   });
 
-  socket.on("deleteProduct", (productId) => {
-    productId = parseInt(productId);
-    const productIndex = products.findIndex(
-      (product) => product.id === productId
-    );
-    if (productIndex !== -1) {
-      products.splice(productIndex, 1);
-      io.emit("products", products);
-    }
-    saveProducts();
-  });
-
-  socket.on("message1", (data) => {
-    io.emit("log", data);
-  });
-
-  socket.on("message2", (data) => {
-    logs.push({ socketid: socket.id, message: data });
-    io.emit("log", { logs });
+  socket.on("deleteProduct",async (productId) => {
+    await productManagerMongoose.deleteProduct(productId);
+    await getProducts();
+    io.emit("products", productsOfMongoose);
   });
 });
 

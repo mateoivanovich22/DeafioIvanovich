@@ -1,4 +1,5 @@
 const socket = io();
+
 const showProducts = (products) => {
   const productList = document.getElementById("product-list");
   productList.innerHTML = "";
@@ -8,7 +9,13 @@ const showProducts = (products) => {
       const productItem = document.createElement("li");
       productItem.productInfo = product;
       productItem.innerHTML = `
-          ${product.title} - Price: $${product.price} - stock: ${product.stock} . id: ${product.id}
+        <div>
+          <strong>Title:</strong> ${product.title} <br>
+          <strong>Price:</strong> $${product.price}<br>
+          <strong>Stock:</strong> ${product.stock}<br>
+          <strong>ID:</strong> ${product._id}<br>
+        </div>
+        <hr>
       `;
       productList.appendChild(productItem);
     });
@@ -16,8 +23,9 @@ const showProducts = (products) => {
     productList.innerText = "No hay productos disponibles";
   }
 
-  console.log("Lista de productos actualizada: ", products);
+  console.log("Lista de productos actualizada:", products);
 };
+
 
 socket.on("products", (products) => {
   showProducts(products);
@@ -53,4 +61,5 @@ form.addEventListener("submit", (event) => {
     status: true 
   };
   socket.emit("productCreated", product);
+  form.reset();
 });
