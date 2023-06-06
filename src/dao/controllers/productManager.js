@@ -30,11 +30,28 @@ class ProductsManager {
     }
   }
 
+  async getPaginatedProducts(page, limit) {
+    try {
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const products = await productsModel.find({})
+        .skip(startIndex)
+        .limit(limit)
+        .lean();
+
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos paginados:", error);
+      throw error;
+    }
+  }
   
   async updateProduct(id, fieldsToUpdate) {
     try {
       const updatedProduct = await productsModel.findByIdAndUpdate(id, fieldsToUpdate, { new: true }).lean();
       console.log(`Producto con id ${id} modificado`, updatedProduct);
+      return updatedProduct;
     } catch (error) {
       console.error("Error modificando producto:", error);
     }

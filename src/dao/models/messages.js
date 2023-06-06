@@ -1,8 +1,9 @@
 const mongoose =require("mongoose") ;
-
+const mongoosePaginate =require('mongoose-paginate-v2') ;
 const db =require("./db.js") ;
 
 const collection = "messages";
+
 
 const messagesSchema = new mongoose.Schema({
   email:{
@@ -15,7 +16,7 @@ const messagesSchema = new mongoose.Schema({
   }
 });
 
-messagesSchema.statics.createProduct = async function (message) {
+messagesSchema.statics.createMessage = async function (message) {
   try {
     const newMessage = new this(message);
     const result = await newMessage.save();
@@ -26,6 +27,7 @@ messagesSchema.statics.createProduct = async function (message) {
   }
 };
 
-const cartsModel = db.model(collection, messagesSchema);
+messagesSchema.plugin(mongoosePaginate);
+const messageModel = db.model(collection, messagesSchema);
 
-module.exports =cartsModel;
+module.exports =messageModel;

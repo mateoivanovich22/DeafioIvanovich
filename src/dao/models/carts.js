@@ -3,23 +3,23 @@ const mongoose = require("mongoose");
 const db = require("./db.js");
 
 const collection = "carts";
+const mongoosePaginate =require('mongoose-paginate-v2') ;
 
 const cartsSchema = new mongoose.Schema({
-  products: {
-    product: {
-      type: String,
-      required: true,
+  products: [
+    {
+      product: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    productId: {
-      type: Number,
-      default: 0,
-    },
-  },
+  ],
 });
+
 
 cartsSchema.statics.createCart = async function (cart) {
   try {
@@ -32,6 +32,7 @@ cartsSchema.statics.createCart = async function (cart) {
   }
 };
 
+cartsSchema.plugin(mongoosePaginate);
 const cartsModel = db.model(collection, cartsSchema);
 
 module.exports = cartsModel;

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose") ;
 
+const mongoosePaginate =require('mongoose-paginate-v2') ;
+
 const db = require("./db.js") ;
 
 const collection = "products";
@@ -50,6 +52,7 @@ productsSchema.statics.createProduct = async function (product) {
   }
 };
 
+productsSchema.plugin(mongoosePaginate);
 const productsModel = db.model(collection, productsSchema);
 
 module.exports =productsModel;

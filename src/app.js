@@ -5,6 +5,9 @@ const handlebars = require("express-handlebars");
 const ProductManagerMongoose = require("./dao/controllers/productManager.js")
 const productManagerMongoose = new ProductManagerMongoose();
 
+const CartsManagerMongoose = require("./dao/controllers/cartsManager.js")
+const cartsManagerMongoose = new CartsManagerMongoose();
+
 const MessagesManager = require("./dao/controllers/messagesManager.js");
 const messagesManager = new MessagesManager();
 
@@ -40,13 +43,43 @@ const getProducts = async () => {
   }
 };
 
+const createCart = async (productId) => {
+  const product = await productManagerMongoose.getProductById(productId);
+
+  if (!product) {
+    return res.status(404).send('El producto no existe.');
+  }
+
+
+  const cart = {
+    products: [
+      {
+        product: product.title,
+        quantity: 1,
+      },
+    ],
+  };
+
+  const createdCart = await cartsManagerMongoose.createCart(cart);
+  console.log("Carrito creado:", createdCart);
+
+  return createdCart;
+}
+
 io.on("connection", async(socket) => {
   console.log("Connected to io server");
+
   await getProducts()
   socket.emit("products", productsOfMongoose);
 
   socket.on("messageCreated", async(message) =>{
     await messagesManager.createMessage(message);
+  })
+
+  socket.on("cartCreated", async( productId ) =>{
+    
+    const newCart = await createCart(productId);
+    socket.emit("cartId", newCart._id);
   })
 
   socket.on("productCreated",async (product) => {
