@@ -21,45 +21,53 @@ const getProducts = async () => {
 getProducts()
 
 router.get('/', async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit) || 10;
-    const page = parseInt(req.query.page) || 1;
-    const sort = req.query.sort || '';
-    const query = req.query.query || '';
-    getProducts()
-    const filters = {};
+  const user = req.session.user;
+  if (user) {
+    try {
+      const limit = parseInt(req.query.limit) || 10;
+      const page = parseInt(req.query.page) || 1;
+      const sort = req.query.sort || '';
+      const query = req.query.query || '';
+      getProducts()
+      const filters = {};
 
-    if (query) {
-      filters.title = { $regex: query, $options: 'i' };
+      if (query) {
+        filters.title = { $regex: query, $options: 'i' };
+      }
+
+      const totalProducts = await productsModel.countDocuments(filters);
+      const totalPages = Math.ceil(totalProducts / limit);
+
+      const queryOptions = {
+        skip: (page - 1) * limit,
+        limit: limit,
+        sort: sort === 'desc' ? { price: -1 } : { price: 1 },
+      };
+
+      const result = await productsModel.paginate(filters, queryOptions);
+      result.prevLink = result.hasPrevPage ? `http://localhost:8080/students?page=${result.prevPage}` : '';
+      result.nextLink = result.hasNextPage ? `http://localhost:8080/students?page=${result.nextPage}` : '';
+      result.isValid = !(page <= 0 || page > result.totalPages);
+      console.log(result)
+
+      const products = await productsModel.find(filters, null, queryOptions).lean();
+
+      const { firstname, lastname } = user;
+      const welcomeMessage = `Bienvenido, ${firstname} ${lastname}!`; 
+
+      res.render('home', { products: products, welcomeMessage: welcomeMessage, user: user });
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error interno del servidor');
     }
+  } else {
 
-    const totalProducts = await productsModel.countDocuments(filters);
-    const totalPages = Math.ceil(totalProducts / limit);
-
-    const queryOptions = {
-      skip: (page - 1) * limit,
-      limit: limit,
-      sort: sort === 'desc' ? { price: -1 } : { price: 1 },
-    };
-
-    const result = await productsModel.paginate(filters, queryOptions);
-    result.prevLink = result.hasPrevPage?`http://localhost:8080/students?page=${result.prevPage}`:'';
-    result.nextLink = result.hasNextPage?`http://localhost:8080/students?page=${result.nextPage}`:'';
-    result.isValid= !(page<=0||page>result.totalPages)
-    console.log(result)
-
-    const products = await productsModel.find(filters, null, queryOptions).lean();
-    res.render('home', { products: products });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error interno del servidor');
+    res.redirect('/login');
   }
 });
 
-
 router.get("/:pid", async(req, res) => {
-  getProducts()
   const id = req.params.pid;
   const product = await productManagerMongo.getProductById(id);
 

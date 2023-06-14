@@ -11,15 +11,23 @@ const cartsManagerMongoose = new CartsManagerMongoose();
 const MessagesManager = require("./dao/controllers/messagesManager.js");
 const messagesManager = new MessagesManager();
 
+const session =require('express-session') ;
+
 let productsOfMongoose = [];
 
 const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
-const viewsRouter = require("./routes/views.router.js");
+const viewsRouter = require("./routes/views.router.js")
 
 const app = express();
 const server = app.listen(8080, () => console.log("Listening on port 8080"));
 const io = new Server(server);
+
+app.use(session({
+  secret: 's3cr3t3',
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use(express.static(__dirname + "/public"));
 app.engine("handlebars", handlebars.engine());
