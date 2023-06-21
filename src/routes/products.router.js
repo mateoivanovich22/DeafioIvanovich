@@ -18,6 +18,7 @@ const getProducts = async () => {
     return [];
   }
 };
+
 getProducts()
 
 router.get('/', async (req, res) => {

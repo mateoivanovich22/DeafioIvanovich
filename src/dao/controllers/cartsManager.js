@@ -1,14 +1,37 @@
 const cartsModel = require("../models/carts.js");
 const { ObjectId } = require('mongoose').Types;
+const ProductManagerMongoose = require("../controllers/productManager.js");
+const productManagerMongoose = new ProductManagerMongoose();
 
 class CartManager {
   constructor() {}
 
   async createCart(cart) {
-    let result = await cartsModel.create(cart);
 
+    let result = await cartsModel.create(cart);
     return result;
   }
+  async createCartWithProduct(productId){
+    const product = await productManagerMongoose.getProductById(productId);
+  
+    if (!product) {
+      return res.status(404).send("El producto no existe.");
+    }
+  
+    const cart = {
+      products: [
+        {
+          product: product.title,
+          quantity: 1,
+        },
+      ],
+    };
+  
+    const createdCart = await cartsManagerMongoose.createCart(cart);
+    console.log("Carrito creado:", createdCart);
+  
+    return createdCart;
+  };
 
   async getCarts() {
     try {
