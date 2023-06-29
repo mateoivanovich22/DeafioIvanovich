@@ -2,7 +2,7 @@ import "./style.css";
 import { Link } from "react-router-dom";
 
 const Item = ({ product }) => {
-  return (
+  return (/*
     <div className="book">
       <div>
         <h2>Stock: {product.stock}</h2>
@@ -50,6 +50,21 @@ const Item = ({ product }) => {
           />
         </div>
       </div>
+    </div>*/
+    <div id="card">
+      <div className="card-details">
+        <p className="text-title">{product.name}</p>
+        <img
+            alt="imagen zapa"
+            src={`/img/${product.image}`}
+            width="250px"
+            height="250px"
+          />
+        <p className="text-body">{product.price}$</p>
+        <p className="text-body">Stock: {product.stock}</p>
+      </div>
+      <Link to={`/item/${product.id}`}><button id="card-button">More info</button></Link>
+        
     </div>
   );
 };
